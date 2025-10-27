@@ -1,6 +1,6 @@
 # Sabanc-Optimization-Challenge-2025-
 Our team's Top 7 Finalist solution for the Sabancı University Optimization Challenge 2025. This project features a Gurobi MIP model and a greedy heuristic to optimize the deployment of healthcare units and their supply routes.
-# 🏆 Sabancı University Optimization Challenge 2025 - Finalist Solution
+#  Sabancı University Optimization Challenge 2025 - Finalist Solution
 
 This repository contains the code and methodology our team developed for the **Sabancı University Optimization Challenge 2025**, where we were honored to qualify as one of the **top 7 finalist teams** out of 71 entries from across Türkiye. The competition was hosted by Sabancı University and [ICRON Technologies](https://www.icron.com/).
 
@@ -18,7 +18,7 @@ The first stage objective was to determine the optimal placement of $M$ healthca
 
 * **Objective:** Minimize the maximum value of $Population_n \times \text{Distance}(n, j)$ for any community $n$ assigned to facility $j$.
 * **Constraints:**
-    * Exactly $M$ units must be deployed[cite: 6].
+    * Exactly $M$ units must be deployed.
     * Units can only be placed at community locations.
     * Each community $n$ must be assigned to exactly one unit.
     * Each unit $j$ has a maximum capacity $C$, and the total population of communities assigned to it cannot exceed this capacity.
@@ -30,7 +30,7 @@ Given the optimal locations from Stage 1, the second stage involved planning the
 * **Objective:** Minimize the **total travel distance** for a fleet of ambulances to deliver equipment to all deployed units.
 * **Constraints:**
     * Each ambulance has a capacity of $Q=10000$.
-    * The equipment demand for each unit is equal to the total population it serves[cite: 14].
+    * The equipment demand for each unit is equal to the total population it serves.
     * All routes must start and end at the depot.
     * Every deployed unit must be visited exactly once.
 
@@ -115,7 +115,7 @@ For the Stage 2 vehicle routing problem, we implemented a fast and effective gre
 
 ---
 
-## 🛠️ How to Run the Code
+##  How to Run the Code
 
 1.  **Clone the Repository:**
     ```bash
