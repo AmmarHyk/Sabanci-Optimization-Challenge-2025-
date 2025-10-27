@@ -119,8 +119,8 @@ For the Stage 2 vehicle routing problem, we implemented a fast and effective gre
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/YourUsername/Your-Repository-Name.git](https://github.com/YourUsername/Your-Repository-Name.git)
-    cd Your-Repository-Name
+    git clone [https://github.com/YourUsername/Your-Repository-Name.git](https://github.com/Ammarhyk/Sabanc-Optimization-Challenge-2025-.git)
+    cd Sabanc-Optimization-Challenge-2025-
     ```
 
 2.  **Install Dependencies:**
