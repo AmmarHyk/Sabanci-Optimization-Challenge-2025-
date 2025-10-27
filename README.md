@@ -10,81 +10,97 @@ Our solution addresses a two-stage optimization problem focused on the efficient
 
 ## Problem Description
 
-[cite_start]The challenge was a two-stage problem: first, the optimal deployment of healthcare units, and second, the optimal routing of ambulances to supply them[cite: 17].
+The challenge was a two-stage problem: first, the optimal deployment of healthcare units, and second, the optimal routing of ambulances to supply them.
 
 ### Stage 1: Healthcare Unit Deployment
 
-[cite_start]The first stage objective was to determine the optimal placement of $M$ healthcare units among $N$ communities[cite: 6]. [cite_start]The goal was to minimize the **maximum population-weighted distance** traveled by any community member to access their assigned unit[cite: 10, 20].
+The first stage objective was to determine the optimal placement of $M$ healthcare units among $N$ communities. The goal was to minimize the **maximum population-weighted distance** traveled by any community member to access their assigned unit.
 
 * **Objective:** Minimize the maximum value of $Population_n \times \text{Distance}(n, j)$ for any community $n$ assigned to facility $j$.
 * **Constraints:**
-    * [cite_start]Exactly $M$ units must be deployed[cite: 6].
-    * [cite_start]Units can only be placed at community locations[cite: 9].
+    * Exactly $M$ units must be deployed[cite: 6].
+    * Units can only be placed at community locations.
     * Each community $n$ must be assigned to exactly one unit.
-    * [cite_start]Each unit $j$ has a maximum capacity $C$, and the total population of communities assigned to it cannot exceed this capacity[cite: 9, 11].
+    * Each unit $j$ has a maximum capacity $C$, and the total population of communities assigned to it cannot exceed this capacity.
 
 ### Stage 2: Equipment Distribution (Vehicle Routing)
 
-[cite_start]Given the optimal locations from Stage 1, the second stage involved planning the logistics to supply these units from a central depot[cite: 12, 13].
+Given the optimal locations from Stage 1, the second stage involved planning the logistics to supply these units from a central depot.
 
-* [cite_start]**Objective:** Minimize the **total travel distance** for a fleet of ambulances to deliver equipment to all deployed units[cite: 16, 21].
+* **Objective:** Minimize the **total travel distance** for a fleet of ambulances to deliver equipment to all deployed units.
 * **Constraints:**
-    * [cite_start]Each ambulance has a capacity of $Q=10000$[cite: 15].
-    * [cite_start]The equipment demand for each unit is equal to the total population it serves[cite: 14].
-    * [cite_start]All routes must start and end at the depot[cite: 16].
-    * [cite_start]Every deployed unit must be visited exactly once[cite: 16].
+    * Each ambulance has a capacity of $Q=10000$.
+    * The equipment demand for each unit is equal to the total population it serves[cite: 14].
+    * All routes must start and end at the depot.
+    * Every deployed unit must be visited exactly once.
 
-[cite_start]**Evaluation:** Solutions were ranked primarily by the Stage 1 objective, followed by the Stage 2 objective, and finally by the number of routes used[cite: 36, 38, 39, 41, 42, 43].
+**Evaluation:** Solutions were ranked primarily by the Stage 1 objective, followed by the Stage 2 objective, and finally by the number of routes used.
 
 ---
 
-## 💡 Our Solution Approach
+##  Our Solution Approach
 
 We developed a hybrid approach: a Mixed-Integer Program (MIP) for the Stage 1 deployment and a custom greedy heuristic for the Stage 2 routing.
 
-### Stage 1: MIP Model with Gurobi
+## Stage 1: Mathematical Formulation
 
-We formulated the deployment problem as a MIP using the `gurobipy` library.
+This stage focuses on optimally deploying $M$ healthcare units across $N$ communities to minimize the **maximum population-weighted distance** any community must travel to its assigned unit.
 
-**Key Optimization:** To ensure the model could be solved within the time limits for large instances ($N \ge 500$), we implemented a **neighbor-based heuristic**. Instead of allowing any community $n$ to be assigned to any facility $j$, we restricted the assignments. Each community $n$ could only be assigned to one of its **2,000 nearest neighbors**. This drastically reduced the number of binary variables ($T_{nj}$) in the model.
+### Sets and Parameters
+- $N$: Set of communities  
+- $Neighbors(n)$: Set of candidate unit locations allowed for community $n$  
+- $P_n$: Population of community $n$  
+- $d_{nj}$: Distance between community $n$ and community $j$  
+- $C$: Capacity of each healthcare unit  
+- $M$: Number of units to be deployed  
 
-#### Model Formulation
+### Decision Variables
+- $D_j \in \{0,1\}$: 1 if a unit is deployed at community $j$, otherwise 0  
+- $T_{nj} \in \{0,1\}$: 1 if community $n$ is assigned to a unit at community $j$, otherwise 0  
+- $Z \ge 0$: Maximum population-weighted distance among all assignments  
 
-* **Variables:**
-    * $D_j \in \{0, 1\}$: $1$ if a healthcare unit is deployed at community $j$, $0$ otherwise.
-    * $T_{nj} \in \{0, 1\}$: $1$ if community $n$ is assigned to the unit at community $j$ (only defined for $j \in \text{Neighbors}(n)$).
-    * $Z \ge 0$: The maximum population-weighted distance (our objective).
+---
 
-* **Objective Function:**
-    $$
-    \min Z
-    $$
+### Objective Function
+Minimize the worst-case (maximum) weighted access distance:
 
-* **Constraints:**
-    1.  **Assign Each Community:** Each community $n$ must be assigned to exactly one facility $j$ from its neighbor list.
-        $$
-        \sum_{j \in \text{Neighbors}(n)} T_{nj} = 1 \quad \forall n \in N
-        $$
-       
-    2.  **Assign to Open Facilities:** A community $n$ can only be assigned to $j$ if a facility is actually deployed at $j$.
-        $$
-        T_{nj} \le D_j \quad \forall n \in N, j \in \text{Neighbors}(n)
-        $$
-       
-    3.  **Deploy Exactly M Facilities:**
-        $$
-        \sum_{j \in N} D_j = M
-        $$
-       
-    4.  **Capacity Constraint:** The total population $P_n$ of all communities assigned to facility $j$ cannot exceed its capacity $C$.
-        $$
-        \sum_{n \text{ s.t. } j \in \text{Neighbors}(n)} P_n \cdot T_{nj} \le C \cdot D_j \quad \forall j \in N
-        $$
-       
-    5.  **Objective Constraint:** $Z$ must be greater than or equal to the population-weighted distance for every single assignment.
-        $$
-        P_n \cdot d_{nj} \cdot T_{nj} \le Z \quad \forall n \in N, j \in \text{Neighbors}(n)
-        $$
+$$
+\min Z
+$$
+
+---
+
+### Constraints
+
+1. **Each community assigned exactly once**
+   
+$$
+\sum_{j \in Neighbors(n)} T_{nj} = 1 \quad \forall n \in N
+$$
+
+3. **Assignments only to deployed units**
+   
+$$
+T_{nj} \le D_j \quad \forall n \in N, \; j \in Neighbors(n)
+$$
+
+4. **Exactly $M$ units must be deployed**
+   
+$$
+\sum_{j \in N} D_j = M
+$$
+
+5. **Capacity restriction at each deployed unit**
+   
+$$
+\sum_{n \mid j \in Neighbors(n)} P_n \cdot T_{nj} \le C \cdot D_j \quad \forall j \in N
+$$
+
+6. **Definition of maximum weighted distance**
+   
+$$
+P_n \cdot d_{nj} \cdot T_{nj} \le Z \quad \forall n \in N, \; j \in Neighbors(n)
+$$
        
 
 ### Stage 2: Greedy Heuristic for Routing
