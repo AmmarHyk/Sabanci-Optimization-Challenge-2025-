@@ -157,8 +157,8 @@ We were proud to achieve strong results across all 25 instances:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/YourUsername/Your-Repository-Name.git](https://github.com/Ammarhyk/Sabanc-Optimization-Challenge-2025-.git)
-    cd Sabanc-Optimization-Challenge-2025-
+    git clone [https://github.com/YourUsername/Your-Repository-Name.git](https://github.com/Ammarhyk/Sabanci-Optimization-Challenge-2025-.git)
+    cd Sabanci-Optimization-Challenge-2025-
     ```
 
 2.  **Install Dependencies:**
