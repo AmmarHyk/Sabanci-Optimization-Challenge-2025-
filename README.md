@@ -10,7 +10,7 @@ Our solution addresses a two-stage optimization problem focused on the efficient
 
 ## Problem Description
 
-The challenge was a two-stage problem: first, the optimal deployment of healthcare units, and second, the optimal routing of ambulances to supply them.
+The challenge was a two-stage problem: first, the optimal deployment of healthcare units, and second, the optimal routing of ambulances to supply them. ( see the pdf fie )
 
 ### Stage 1: Healthcare Unit Deployment
 
