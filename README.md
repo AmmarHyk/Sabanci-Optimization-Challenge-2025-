@@ -40,8 +40,31 @@ Given the optimal locations from Stage 1, the second stage involved planning the
 
 ##  Our Solution Approach
 
-We developed a hybrid approach: a Mixed-Integer Program (MIP) for the Stage 1 deployment and a custom greedy heuristic for the Stage 2 routing.
+We developed a hybrid strategy, combining a computationally-optimized Mixed-Integer Program (MIP) for the Stage 1 deployment with a fast, custom greedy heuristic for the Stage 2 routing.
 
+### Stage 1: MIP with a Neighbor-Based Heuristic
+
+The core of our Stage 1 solution was a MIP formulated with `gurobipy`.
+
+A full-scale MIP would require creating $N \times N$ potential assignment variables ($T_{nj}$), which is computationally infeasible and creates extreme memory demands for instances as large as $N=4000$.
+
+To overcome this, we designed a **neighbor-based heuristic** to intelligently reduce the problem size. The logic is that a community $n$ will never be assigned to a facility $j$ that is extremely far away, especially when $M$ facilities are being deployed.
+
+**Our method was as follows:**
+1.  **Pre-computation:** We first calculated the full $N \times N$ distance matrix.
+2.  **Neighbor Filtering:** For each community $n$, we identified its **2,000 nearest neighbors** ($j$).
+3.  **Model Reduction:** We then built the MIP model, **only creating assignment variables $T_{nj}$ if $j$ was in the pre-computed neighbor list for $n$**.
+
+This optimization drastically reduced the number of binary variables in the model from $N^2$ (e.g., 16 million for $N=4000$) to $N \times 2000$. This was the key to making the MIP tractable and finding high-quality, low-gap solutions within the competition's time limits.
+
+### Stage 2: Greedy Routing Heuristic
+
+For the Stage 2 vehicle routing problem, we implemented a fast and effective greedy heuristic similar to a "First Fit Decreasing" bin-packing strategy.
+
+1.  **Calculate Demand:** We summed the population of all assigned communities for each deployed facility.
+2.  **Sort by Demand:** We sorted the facilities in descending order of their equipment demand.
+3.  **Build Routes:** We iterated through the sorted list, adding facilities to the current ambulance route as long as the total demand did not exceed the $Q=10000$ capacity. When a facility could not be added, the current route was "closed," and a new route was started.
+   
 ## Stage 1: Mathematical Formulation
 
 This stage focuses on optimally deploying $M$ healthcare units across $N$ communities to minimize the **maximum population-weighted distance** any community must travel to its assigned unit.
