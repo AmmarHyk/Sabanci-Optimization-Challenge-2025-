@@ -1,5 +1,5 @@
 # Sabanc-Optimization-Challenge-2025-
-Our team's Top 7 Finalist solution for the Sabancı University Optimization Challenge 2025. This project features a Gurobi MIP model and a greedy heuristic to optimize the deployment of healthcare units and their supply routes.
+Our team's Top 5 Finalist solution for the Sabancı University Optimization Challenge 2025. This project features a Gurobi MIP model and a greedy heuristic to optimize the deployment of healthcare units and their supply routes.
 #  Sabancı University Optimization Challenge 2025 - Finalist Solution
 
 This repository contains the code and methodology our team developed for the **Sabancı University Optimization Challenge 2025**, where we were honored to qualify as one of the **top 7 finalist teams** out of 71 entries from across Türkiye. The competition was hosted by Sabancı University and [ICRON Technologies](https://www.icron.com/).
