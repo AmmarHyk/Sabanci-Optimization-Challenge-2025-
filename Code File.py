@@ -35,8 +35,8 @@ dx2 = (Xn_mat - Xn_mat.T) ** 2
 dy2 = (Yn_mat - Yn_mat.T) ** 2
 d = np.sqrt(dx2 + dy2).astype(np.float32)  # final NxN distance matrix
 
-
-neighbors = {n: np.argsort(d[n])[:2000].tolist() for n in range(N)}
+#The neighbor based heuristic
+neighbors = {n: np.argsort(d[n])[:2000].tolist() for n in range(N)} 
 
 
 from gurobipy import Model, GRB, quicksum
@@ -214,6 +214,7 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("healthcare_deployment_plot.png")
 plt.show(block=True)
+
 
 
 
