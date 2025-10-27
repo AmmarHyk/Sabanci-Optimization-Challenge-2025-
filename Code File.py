@@ -61,7 +61,7 @@ Dj = model.addVars(N, vtype=GRB.BINARY, name="Dj")
 Tnj = model.addVars([(n, j) for n in range(N) for j in neighbors[n]], vtype=GRB.BINARY, name="Tnj")
 Z = model.addVar(lb=0, name="Z")
 
-# Objective: Minimize 1,000,000 * Z 
+# Objective: Minimize 1,000,000 (big M) * Z 
 
 model.setObjective( 1000000 * Z, GRB.MINIMIZE )
 
@@ -214,5 +214,6 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("healthcare_deployment_plot.png")
 plt.show(block=True)
+
 
 
