@@ -115,6 +115,21 @@ For the Stage 2 vehicle routing problem, we implemented a fast and effective gre
 
 ---
 
+## 📊 Performance and Scalability
+
+The competition involved **25 instances** of increasing size and complexity. The number of communities ($N$) and facilities to deploy ($M$) scaled significantly, making the problem exceptionally challenging.
+
+* **Problem Scale:** The instances grew to a maximum size of **$N=4000$ communities** and **$M=600$ facilities**.
+* **Technical Challenge:** These large-scale instances were extremely memory-hungry and computationally intensive. Our neighbor-based heuristic (restricting $T_{nj}$ variables) was a critical optimization to make the MIP model solvable.
+
+### Our Results
+
+We were proud to achieve strong results across all 25 instances:
+
+* **Optimal Solutions:** We solved most of the instances to a **0% MIP gap**.
+* **Near-Optimal:** For the next tier of difficult instances, we consistently achieved small gaps between **1% and 5%**.
+* **Largest Instances:** Only the final two, most complex instances, finished with a 20% gap, demonstrating the problem's extreme difficulty at its peak.
+
 ##  How to Run the Code
 
 1.  **Clone the Repository:**
